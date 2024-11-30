@@ -1,10 +1,11 @@
 import React, { useState } from "react";
+
 import classNames from "classnames/bind";
 import styles from "./ConfigPage.module.css";
-
+import "./ConfigPage.module.css";
 const clx = classNames.bind(styles);
 
-function ConfigPage(){
+const ConfigPage = () => {
   const [numPages, setNumPages] = useState(20);
   const [inputValue, setInputValue] = useState(""); 
   const [date, setDate] = useState("28-08-2024"); 
@@ -43,11 +44,10 @@ function ConfigPage(){
 
   return (
     <div className={clx("wrapper")}>
-      <h1>Cấu hình</h1>
-      <div className={clx("container")}>
+      <h1 >Cấu hình</h1>
         {/* Số tờ cấp phát */}
         <div className={clx("paper")}>
-          <span className={clx("bold-text")}>Số tờ cấp phát: </span>
+          <span >Số tờ cấp phát: </span>
           <span className={clx("number")}>{numPages}</span> tờ A4/một người dùng
           <input
             className={clx("label-paper")}
@@ -61,7 +61,7 @@ function ConfigPage(){
         </div> 
 
         <div className={clx("date")}>
-          <span className={clx("bold-text")}>Ngày cấp phát: </span>
+          <span>Ngày cấp phát: </span>
           <span className={clx("number")}>{tempDate}</span>
           <input
             className={clx("label-date")}
@@ -75,7 +75,7 @@ function ConfigPage(){
 
         {/* Loại file được phép tải */}
         <div className={clx("file-types")}>
-          <span className={clx("bold-text")}>Loại file được phép tải lên:</span> 
+          <span>Loại file được phép tải lên:</span> 
           <div className={clx("label-input")}>
           {["XLS", "DOC", "JPG", "PPT", "PNG", "PDF"].map((type) => (
             <label  key={type}>
@@ -92,7 +92,6 @@ function ConfigPage(){
           <button className={clx("button-file")} onClick={() => console.log({allowedTypes})}>Cập nhật</button>
         </div>
       </div>
-    </div>
   );
 };
 

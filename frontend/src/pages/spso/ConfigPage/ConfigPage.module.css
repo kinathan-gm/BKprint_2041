@@ -1,35 +1,19 @@
 .wrapper{
-    position: relative;
     display: flex;
-    height: 70vh;
-    background-color: white;;
-    margin-left: 50px;
-    margin-right: 50px;
-    padding-top: 30px;
-    padding-left: 30px;
-    display: flex;
-    border-radius: 5px;
-    justify-content: center;
-}
-.container{
-    height: auto;
-    position: absolute;
-    top: 150px;
-    margin-top: 0px;
-    left: 100px;
+    height: 90%;
+    flex-direction: column;
+    background-color: white;
+    border: solid 1px #d9d9d9;
+    border-radius: 20px;
+    width: 90%;
+    align-items: center;
 }
 .paper{
-    display: inline-block;
     font-size: 30px;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
+    margin-top: 40px;
 }
 .date{
-    display: inline-block;
-    font-size: 30px;
-    margin-bottom: 20px;
-}
-.bold-text {
-    font-weight: bold;
     font-size: 30px;
     margin-bottom: 20px;
 }
@@ -39,15 +23,17 @@
 }
 .button{
   transform: translateY(-5px);
-  width: 300px;
+  width: 200px;
   text-decoration: none;
   border: solid 2px white;
   background-color:#1488D8;
   color: white;
   padding: 10px 20px 10px 20px;
-  border-radius: 20px;
   font-weight: 500;
   font-size: 20px;
+  border-radius: 20px;
+  
+  
   cursor: pointer;
   margin-left: 20px;
   transition: background-color 0.1s ease-in;
@@ -55,16 +41,24 @@
 .label-paper{
     border-radius: 10px;
     margin-left: 40px;
+    width: 380px;
 }
-
+.file-types{
+    font-size: 30px;
+    margin-left: 180px;
+    margin-bottom: 40px;
+    margin-top: 20px;
+    width: 100%;
+}
 .label-date{
     color: white;
     border-radius: 10px;
-    transform: translateX(289px);
+    margin-left: 120px;
+    width: 400px;
 }
 .button-date{
     transform: translateY(-5px);
-    width: 300px;
+    width: 200px;
     text-decoration: none;
     border: solid 2px white;
     background-color:#1488D8;
@@ -74,47 +68,36 @@
     font-weight: 500;
     font-size: 20px;
     cursor: pointer;
-    margin-left: 20px;
+    margin-left: 90px;
     transition: background-color 0.1s ease-in;
-    transform: translateX(310px);
 }
 .label-input {
-    display: flex;
     flex-wrap: wrap; 
     display: grid;
+    gap:20px;
     grid-template-columns: 1fr 1fr;
      margin-top: 20px;
      width: 50%;
   }
-  .label-input label {
-    display: flex; 
-    align-items: center; 
-    margin-bottom: 10px;
-   
-  }
-
   .checkbox-input {
     width: 30px;
     height: 30px;
     margin-right: 10px; 
-    background-color: #712727;
-  border: 2px solid #ccc; 
-  transition: background-color 0.3s ease, border-color 0.3s ease;
   }
   .button-file{
-    width: 300px;
+    position: absolute;
+    width: 200px;
     text-decoration: none;
     border: solid 2px white;
     background-color:#1488D8;
-    transform: translateY(-100px);
     color: white;
     padding: 10px 20px 10px 20px;
     border-radius: 20px;
     font-weight: 500;
     font-size: 20px;
     cursor: pointer;
-    margin-left: 10px;
-    transition: background-color 0.1s ease-in;
     float: right;
-    margin-right: 70px;
+    right:10%;
+    bottom:20%;
+    transition: background-color 0.1s ease-in;
 }

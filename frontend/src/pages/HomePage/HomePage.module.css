@@ -1,0 +1,61 @@
+.wrapper {
+    background-size: cover;
+    height: 100%;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-image: url('../../assets/home_background_student.png');
+    background-position: 0px -300px;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.content {
+      text-align: center;
+      color: white;
+      padding-top: 20px;
+      padding-bottom: 30px;
+      background-color: rgba(0, 0, 0, 0.7);
+      max-width: 100%;
+      width: 100%;
+      height: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 30px;
+}
+
+.logoin {
+      margin-top: 20px;
+      width: 50px; 
+      height: 50px; 
+      background-color: #F0FFFF; 
+      border-radius: 20px; 
+      box-shadow: 1px 1px 8px 8px rgba(255, 255, 255, 0.25);
+      padding: 10px;
+}
+
+.content h1 {
+      margin: 0px;
+}
+
+.content p {
+      width: 450px;
+}
+
+.cta-button {
+      text-decoration: none;
+      background-color:#1488D8;
+      color: white;
+      padding: 15px 40px;
+      border-radius: 30px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: box-shadow 0.1s ease-in;
+}
+
+.cta-button:hover {
+      box-shadow: 1px 1px 4px 8px rgba(20,136,216,0.3);
+}

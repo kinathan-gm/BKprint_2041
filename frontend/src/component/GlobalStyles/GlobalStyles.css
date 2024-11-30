@@ -1,0 +1,23 @@
+@import 'normalize.css';
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+
+:root {
+    --primary: #1488d8; 
+    --dark: #000;
+    --red: #EF414E;
+    --green: #11945A;
+    --default-background-color: #F3F4F6;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    font-family: "Nunito Sans", serif;
+    font-size: 1.6rem;
+}
+
+
+
+  

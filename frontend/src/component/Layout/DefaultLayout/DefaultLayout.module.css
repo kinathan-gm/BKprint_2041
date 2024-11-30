@@ -1,0 +1,13 @@
+.wrapper {
+    height: 100vh;
+    width: 100vw;
+}
+
+.content {
+    background-color: var(--default-background-color) ;
+    height: calc(100vh - 80px);
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

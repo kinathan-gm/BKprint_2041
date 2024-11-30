@@ -1,0 +1,131 @@
+/* Purchase.css - Giao diện full page */
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
+  background: #f0f2f5; /* Màu nền xám nhạt */
+}
+
+.purchase-section {
+  background: #fff; /* Nền trắng */
+  border-radius: 8px; /* Bo góc */
+  padding: 40px; /* Khoảng cách bên trong */
+  max-width: 800px; /* Rộng phần nội dung */
+  margin: 0 auto; /* Căn giữa theo chiều ngang */
+  height: 100%; /* Chiều cao full page */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Hiệu ứng nổi */
+  display: flex; /* Sử dụng flexbox */
+  flex-direction: column; /* Sắp xếp các phần tử theo chiều dọc */
+  justify-content: center; /* Căn giữa theo chiều dọc */
+}
+
+.title {
+  font-size: 26px; /* Tiêu đề to hơn */
+  font-weight: bold;
+  text-align: center; /* Căn giữa */
+  color: #333;
+  margin-bottom: 30px;
+}
+
+.info {
+  margin-bottom: 20px;
+  text-align: left; /* Căn lề trái */
+  font-size: 18px;
+}
+
+.highlight-red {
+  color: red;
+  font-weight: bold;
+}
+
+.highlight-green {
+  color: green;
+  font-weight: bold;
+}
+
+.purchase-input {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Khoảng cách giữa các phần tử */
+  margin: 30px 0;
+}
+
+.input-label {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.input-box {
+  width: 80px; /* Ô nhập liệu rộng hơn */
+  text-align: center;
+  padding: 10px;
+  font-size: 18px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.purchase-button {
+  padding: 12px 30px; /* Nút bấm lớn hơn */
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  background: #007bff;
+  color: white;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.purchase-button:hover {
+  background: #0056b3;
+}
+
+.recharge-button {
+  padding: 12px 30px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  background: #28a745;
+  color: white;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.recharge-button:hover {
+  background: #1e7e34;
+}
+
+.total-fee {
+  margin-top: 20px;
+  font-size: 18px;
+  text-align: left; /* Căn lề trái */
+}
+
+.note {
+  font-size: 16px; /* Tăng kích thước ghi chú */
+  color: #888;
+  margin-top: 5px;
+}
+
+.balance {
+  margin-top: 10px;
+  font-size: 18px;
+}
+
+/* Phần header hiển thị số dư */
+.header-balance {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Căn phải */
+  margin-bottom: 15px;
+}
+
+.header-balance span {
+  font-size: 18px;
+  font-weight: bold;
+  color: #007bff;
+  margin-left: 10px;
+}

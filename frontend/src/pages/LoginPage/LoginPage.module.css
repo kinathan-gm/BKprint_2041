@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Marck+Script&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+
+.the{
+  position: relative;
+  left: 120px;
+  top: 193px;
+  color: #1488D8;
+}
+.logobk {
+    aspect-ratio: 3508/2481;
+    height: 60px;
+    align-items: center;
+    position: relative;
+    left: 100px;
+    top: 220px;
+  }
+.ssps{
+    width: 50px; 
+    height: 50px; 
+    align-items: center;
+    position: relative;
+    left: 100px;
+    top: 210px;
+}
+.loginform{
+  position: relative;
+  width: fit-content;
+}
+.form-login {
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 60px;
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 20px;
+  width: 160%;
+}
+
+.input-group label {
+  position: absolute;
+  margin-left: 10px;
+  color: gray;
+  padding: 0 10px;
+  font-weight: 400;
+  pointer-events: none;
+  transition: top .4s;
+} 
+
+.input-group input {
+  border: 1px solid black;
+  padding: 20px 20px;
+  font-size: 16px;
+  width: 500px;
+
+}
+.input-group input:placeholder-shown + label {
+  top: 50%; 
+  transform: translateY(-50%);
+  font-size: 16px; 
+}
+
+.input-group input:not(:placeholder-shown) + label,
+.input-group input:focus + label {
+  top: -12px;
+  transform: translateY(0);
+  font-size: 14px;
+  border: white;
+  background-color: white;
+  color: black;
+}
+
+.login-button {
+  width: 160%;
+  text-decoration: none;
+  font-weight: 400;
+  border: solid 2px white;
+  background-color:#1488D8;
+  color: white;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.1s ease-in;
+  width: 545px;
+  height: 60px;
+}
+
+.login-button:hover {
+  background-color: #044b97;
+}
+
+.form{
+  position: relative;
+  left: 120px;
+  top: 193px;
+  display: flex;
+}
+
+h1 b {
+  font-family: "Marck Script", cursive;
+  font-style: normal;
+  text-transform: capitalize;
+  font-size: 40px;
+}

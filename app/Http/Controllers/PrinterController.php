@@ -53,7 +53,10 @@ class PrinterController extends Controller {
         }
         return response()->json([
             'status' => 'success',
-
+            'printer' => $printer,
+        ]);
+    }
+    
     public function getAdminPrinters(){
         $printers = Printer::all();
 

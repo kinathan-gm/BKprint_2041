@@ -25,4 +25,8 @@ class Student extends Model
         'password',
         'remember_token',
     ];
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
 }

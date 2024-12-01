@@ -38,11 +38,11 @@ function LoginPage() {
     if (data.status === 'success') {
       localStorage.setItem('user', JSON.stringify(data.user)); 
       localStorage.setItem('userType', data.userType); 
-
+      localStorage.setItem('user_id', data.user_id);
       if (data.userType === 'student') {
         navigate('/student'); 
       } else if (data.userType === 'spso') {
-        navigate('/spso'); // Điều hướng nếu là spso
+        navigate('/spso'); 
       }
     } else {
       setError(data.message || 'Đăng nhập thất bại'); 

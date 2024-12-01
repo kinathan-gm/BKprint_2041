@@ -9,10 +9,8 @@ class Student extends Model
 {
     use HasFactory;
 
-    // Nếu bảng không tuân theo chuẩn "students"
     protected $table = 'students';
-
-    // Các cột được phép thêm/sửa
+    protected $primaryKey = 'StudentID';
     protected $fillable = [
         'Name',
         'Email',
@@ -20,7 +18,6 @@ class Student extends Model
         'password',
     ];
 
-    // Ẩn các cột nhạy cảm
     protected $hidden = [
         'password',
         'remember_token',

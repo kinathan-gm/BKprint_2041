@@ -10,6 +10,7 @@ class Printer extends Model
     use HasFactory;
 
     protected $table = 'printers';
+
     protected $primaryKey = 'PrinterID';
     protected $fillable = [
         'Brand',

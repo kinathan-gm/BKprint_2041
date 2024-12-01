@@ -41,6 +41,19 @@ class PrinterController extends Controller {
         ]);
     }
 
+    public function getPrinterByID(Request $request)
+    {
+        $id = $request->query('id');
+        $printer = Printer::find($id);  
+        if (!$printer) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Máy in không tồn tại',
+            ], 404);
+        }
+        return response()->json([
+            'status' => 'success',
+
     public function getAdminPrinters(){
         $printers = Printer::all();
 
@@ -145,6 +158,7 @@ class PrinterController extends Controller {
         return response()->json([
             'status' => 'success',
             'message' => 'Cập nhật máy in thành công.',
+
             'printer' => $printer,
         ]);
     }

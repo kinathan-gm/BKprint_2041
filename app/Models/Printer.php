@@ -11,7 +11,6 @@ class Printer extends Model
 
     protected $table = 'printers';
 
-    
     protected $primaryKey = 'PrinterID';
     protected $fillable = [
         'Brand',

@@ -1,44 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./PrinterManagementPage.css";
 
 function PrinterManagementPage() {
-  const [printers, setPrinters] = useState([
-    {
-      id: "001",
-      name: "HP Laserjet Pro",
-      location: "Tầng 1 - H6 - 101",
-      status: "on",
-    },
-    {
-      id: "002",
-      name: "Canon Pixma TS",
-      location: "Tầng 1 - H6 - 101",
-      status: "on",
-    },
-    {
-      id: "003",
-      name: "Epson Workforce 7120",
-      location: "Tầng 1 - H6 - 101",
-      status: "off",
-    },
-    {
-      id: "004",
-      name: "Canon Pixma TS",
-      location: "Tầng 1 - H6 - 101",
-      status: "off",
-    },
-    {
-      id: "005",
-      name: "Canon Pixma TS",
-      location: "Tầng 1 - H6 - 101",
-      status: "on",
-    },
-  ]);
+  const [printers, setPrinters] = useState([]);
+
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [currentPrinter, setCurrentPrinter] = useState(null);
-  const [newPrinter, setNewPrinter] = useState({ name: "", location: "" });
+  const [newPrinter, setNewPrinter] = useState({ name: "", location: ""});
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/api/adminPrinters")
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          setPrinters(data.printers);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching printers:", error);
+      });
+  }, []);
 
   const toggleStatus = (id) => {
     setPrinters((prevPrinters) =>
@@ -50,12 +33,53 @@ function PrinterManagementPage() {
     );
   };
 
-  const handleAddPrinter = () => {
-    if (!newPrinter.name || !newPrinter.location) return; // Prevent adding if fields are empty
-    const newId = (printers.length + 1).toString().padStart(3, "0");
-    setPrinters([...printers, { id: newId, ...newPrinter, status: "off" }]);
-    setNewPrinter({ name: "", location: "" });
-    setIsAddModalOpen(false);
+  // const handleAddPrinter = () => {
+  //   if (!newPrinter.name || !newPrinter.location) return; // Prevent adding if fields are empty
+  //   const newId = (printers.length + 1);
+  //   setPrinters([...printers, { id: newId, ...newPrinter, status: "on" }]);
+  //   setNewPrinter({ name: "", location: "" });
+  //   setIsAddModalOpen(false);
+  // };
+  const handleAddPrinter = async () => {
+    if (!newPrinter.name || !newPrinter.location) {
+      alert("Vui lòng nhập đầy đủ thông tin trước khi thêm.");
+      return;
+    }
+  
+    const payload = {
+      name: newPrinter.name, 
+      location: newPrinter.location, 
+    };
+  
+    try {
+      const response = await fetch("http://127.0.0.1:8000/api/printers", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        // Nếu API trả về thành công, thêm máy in mới vào danh sách
+        const newId = (printers.length + 1);
+        setPrinters((prevPrinters) => [
+          ...prevPrinters,
+          { id: newId, ...payload, status: "on" },
+        ]);
+        alert("Thêm máy in thành công!");
+      } else {
+        alert(`Lỗi: ${data.message}`);
+      }
+    } catch (error) {
+      console.error("Lỗi khi gọi API:", error);
+      alert("Không thể kết nối đến server. Vui lòng thử lại.");
+    } finally {
+      setNewPrinter({ name: "", location: "", description: "" });
+      setIsAddModalOpen(false);
+    }
   };
 
   const handleOpenEditModal = (printer) => {
@@ -63,14 +87,55 @@ function PrinterManagementPage() {
     setIsEditModalOpen(true);
   };
 
-  const handleSaveChanges = () => {
-    setPrinters((prevPrinters) =>
-      prevPrinters.map((printer) =>
-        printer.id === currentPrinter.id ? currentPrinter : printer
-      )
-    );
-    setIsEditModalOpen(false);
-    setCurrentPrinter(null);
+  // const handleSaveChanges = () => {
+  //   setPrinters((prevPrinters) =>
+  //     prevPrinters.map((printer) =>
+  //       printer.id === currentPrinter.id ? currentPrinter : printer
+  //     )
+  //   );
+  //   setIsEditModalOpen(false);
+  //   setCurrentPrinter(null);
+  // };
+  const handleSaveChanges = async () => {
+    if (!currentPrinter.name || !currentPrinter.location) {
+      alert("Vui lòng nhập đầy đủ thông tin trước khi lưu.");
+      return;
+    }
+  
+    const payload = {
+      name: currentPrinter.name,
+      location: currentPrinter.location,
+      status: currentPrinter.status,
+    };
+  
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/api/printers/${currentPrinter.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        setPrinters((prevPrinters) =>
+          prevPrinters.map((printer) =>
+            printer.id === currentPrinter.id ? { ...printer, ...payload } : printer
+          )
+        );
+        alert("Cập nhật máy in thành công!");
+      } else {
+        alert(`Lỗi: ${data.message}`);
+      }
+    } catch (error) {
+      console.error("Lỗi khi gọi API:", error);
+      alert("Không thể kết nối đến server. Vui lòng thử lại.");
+    } finally {
+      setIsEditModalOpen(false);
+      setCurrentPrinter(null);
+    }
   };
 
   return (
@@ -127,7 +192,6 @@ function PrinterManagementPage() {
         </tbody>
       </table>
       <footer className="footer">
-        <span>Hiển thị {printers.length}/180 dòng</span>
         <div className="pagination">
           <button className="prev-button">Trước</button>
           <button className="next-button">Sau</button>
@@ -162,7 +226,7 @@ function PrinterManagementPage() {
                   onChange={(e) =>
                     setNewPrinter({ ...newPrinter, name: e.target.value })
                   }
-                  placeholder="Nhập tên máy in"
+                  placeholder="Nhập tên máy in: Brand - Model"
                   required
                 />
               </div>
@@ -175,7 +239,7 @@ function PrinterManagementPage() {
                   onChange={(e) =>
                     setNewPrinter({ ...newPrinter, location: e.target.value })
                   }
-                  placeholder="Nhập vị trí"
+                  placeholder="Nhập vị trí: CampusName -  BuildingName - RoomNumber"
                   required
                 />
               </div>

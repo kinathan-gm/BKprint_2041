@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./History.module.css";
 import "./History.module.css";
+
 import { useState, useEffect } from "react";
 import classNames from "classnames/bind";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -13,12 +14,14 @@ function SearchBar({onSearch}) {
   const [dateFrom, setDateFrom] = useState("2024-11-30");
   const [dateTo, setDateTo] = useState("2024-11-30");
 
+
   const handleFromChange = (event) => {
     setDateFrom(event.target.value);
   };
   const handleToChange = (event) => {
     setDateTo(event.target.value);
   };
+
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
   };
@@ -227,3 +230,4 @@ function HistoryPage() {
 }
 
 export default HistoryPage;
+

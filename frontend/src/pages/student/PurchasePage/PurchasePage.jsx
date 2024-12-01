@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import "./PurchasePage.css";
 import SuccessPopup from "./SuccessPopup";
 import FailurePopup from "./FailurePopup";
 import RechargePopup from "./RechargePopup";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const PurchasePage = () => {
   const [pagesToBuy, setPagesToBuy] = useState(10);
@@ -14,22 +15,63 @@ const PurchasePage = () => {
   const pagePrice = 500;
 
   // Handles input change and recalculates total fee
+  useEffect(() => {
+    const fetchBalancePage = async () => {
+      try {
+        // Lấy user từ localStorage
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (!user || !user.StudentID) {
+          console.error("User không tồn tại hoặc thiếu idStudent");
+          return;
+        }
+
+        // Gọi API
+        const response = await axios.get(`http://127.0.0.1:8000/api/students/${user.StudentID}/getBalancePage`);
+        setRemainingPages(response.data.balancePage); // Cập nhật remainingPages
+      } catch (error) {
+        console.error("Lỗi khi lấy balancePage:", error);
+      }
+    };
+
+    fetchBalancePage();
+  }, []);
   const handleInputChange = (e) => {
     const value = Math.max(1, parseInt(e.target.value, 10) || 0);
     setPagesToBuy(value);
     setTotalFee(value * pagePrice);
   };
 
-  const handlePurchase = () => {
+  const handlePurchase = async () => {
     if (totalFee > userBalance) {
       setPopupType("failure");
       return;
     }
 
-    // Deduct balance and add purchased pages
-    setUserBalance(userBalance - totalFee);
-    setRemainingPages(remainingPages + pagesToBuy);
-    setPopupType("success");
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+        if (!user || !user.StudentID) {
+          console.error("User không tồn tại hoặc thiếu idStudent");
+          return;
+        }
+      // Gửi yêu cầu đến API
+      const response = await axios.post(
+        `http://127.0.0.1:8000/api/students/${user.StudentID}/paymentPage`, // Thay ID sinh viên bằng ID thực tế
+        {
+          amount: totalFee,
+          paymentMethod: "credit-card", // Hoặc phương thức thanh toán khác
+          page: pagesToBuy,
+        }
+      );
+
+      // Cập nhật số dư và số trang còn lại từ phản hồi API
+      const { balancePage } = response.data;
+      setRemainingPages(balancePage);
+      setUserBalance(userBalance - totalFee); // Giảm số dư hiện tại
+      setPopupType("success");
+    } catch (error) {
+      console.error("Lỗi khi thanh toán:", error);
+      setPopupType("failure");
+    }
   };
 
   const handleRecharge = () => {

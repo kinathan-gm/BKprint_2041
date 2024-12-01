@@ -42,4 +42,20 @@ class PrinterController extends Controller
             'AllowedFileTypes' => $response2
         ]);
     }
+
+    public function getPrinterByID(Request $request)
+    {
+        $id = $request->query('id');
+        $printer = Printer::find($id);  
+        if (!$printer) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Máy in không tồn tại',
+            ], 404);
+        }
+        return response()->json([
+            'status' => 'success',
+            'printer' => $printer,
+        ]);
+    }
 }

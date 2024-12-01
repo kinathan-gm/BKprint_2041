@@ -9,6 +9,7 @@ import AuthLayout from './component/Layout/AuthLayout/AuthLayout'
 import PrintingPage from './pages/student/PrintingPage/PrintingPage'
 import PurchasePage from './pages/student/PurchasePage/PurchasePage'
 import DashBoard from './pages/spso/DashBoard/DashBoard'
+import SpsoHistory from './pages/spso/History/History'
 import { Route, Routes } from 'react-router-dom'
 import HomePage from './pages/homePage/Homepage'
 
@@ -28,7 +29,7 @@ const App = () => {
           <Route path='/spso' element = {<DefaultLayout isAuthenticated={true} userType={'spso'} userName={'N'}><DashBoard/></DefaultLayout>}/>       
           <Route path='/spso/manage' element={<DefaultLayout isAuthenticated={true} userType={'spso'} userName={'N'}><PrinterManagementPage/></DefaultLayout>}/>   
           <Route path='/spso/config' element={<DefaultLayout isAuthenticated={true} userType={'spso'} userName={'N'}><ConfigPage/></DefaultLayout>}/>    
-          <Route path='/spso/history'/>    
+          <Route path='/spso/history'element={<DefaultLayout isAuthenticated={true} userType={'spso'} userName={'N'}><SpsoHistory/></DefaultLayout>}/>/    
        </Routes>  
     </div>
   )

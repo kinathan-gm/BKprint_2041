@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Document extends Model
 {
     use HasFactory;
+
     protected $primaryKey = 'DocumentID';
 
     protected $fillable = [
@@ -22,3 +23,4 @@ class Document extends Model
         return $this->belongsTo(Student::class, 'StudentID', 'StudentID');
     }
 }
+

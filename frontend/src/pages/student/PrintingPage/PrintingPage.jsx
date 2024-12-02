@@ -17,8 +17,12 @@ function PrintingPage(){
     const [fileset, setFileSet] = useState({icon: faFile, theme: 'default-theme'});
     const [printers, setPrinters] = useState([]); // Danh sách máy in từ API
     const [allowedFileTypes, setAllowedFileTypes] = useState([]);
-
+   
     // const printers = ['001 - CS2 - H6 - Tầng 1', '002 - CS2 - H6 - Tầng 1', '003 - CS2 - H6 - Tầng 1' ];
+    const user = JSON.parse(localStorage.getItem("user")); // Parse JSON
+    const studentID = user?.StudentID || null; // Lấy StudentID hoặc trả về null nếu không có
+    console.log("StudentID từ localStorage:", studentID);
+
 
     const popupSets = [
         {
@@ -105,8 +109,10 @@ function PrintingPage(){
         const selectedFile = e.target.files[0];
         if (selectedFile) {
             const fileExtension = selectedFile.name.split('.').pop().toUpperCase(); // Lấy phần mở rộng file
-            console.log(fileExtension)
-            console.log(allowedFileTypes)
+            // console.log(fileExtension)
+            // console.log(allowedFileTypes)
+            console.log("Selected File Name:", selectedFile.name);
+            console.log("Selected File Type:", selectedFile.type);
 
             if (allowedFileTypes.includes(fileExtension)) {
                 setFile(selectedFile);
@@ -135,20 +141,87 @@ function PrintingPage(){
         setPopup(false); // Close the popup
     };
 
-    const handleFormSubmit = (e) => {
-        e.preventDefault(); 
-        
+
+
+    const handleFormSubmit = async (e) => {
+        e.preventDefault();
+        const fileName = file.name;
+        const fileExtension = file.name.split('.').pop().toUpperCase();
+        const printerID = document.getElementById('printer-cb').value; // Lấy PrinterID từ combo box
+        const paperSize = document.getElementById('paper-cb').value; // Lấy khổ giấy
+        const isDoubleSided = side === 2 ? true : false; // 0: 1 mặt, 1: 2 mặt
+        const copies = document.getElementById('copies-nbox').value; // Số bản in
+    
+        console.log({
+            fileName,
+            fileExtension,
+            studentID,
+            printerID,
+            paperSize,
+            isDoubleSided,
+            copies,
+        });
+    
         if (file === null) {
             openPopupBox();
-        } else if (!allowedFileTypes.includes(file.type.split('/')[1].toUpperCase())) {
+        } else if (!allowedFileTypes.includes(fileExtension)) {
             setPopupSet(popupSets[0]);
             openPopupBox();
         } else if (file.size > 100 * 1024 * 1024) { // 100MB limit
             setPopupSet(popupSets[1]);
             openPopupBox();
         } else {
-            setPopupSet(popupSets[2]);
-            openPopupBox();
+            try {
+                // Gửi thông tin tài liệu lên API DocumentController
+                const documentResponse = await fetch("http://127.0.0.1:8000/api/documents", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        StudentID: studentID,
+                        FileName: fileName,
+                        FileType: fileExtension,
+                    }),
+                });
+    
+                const documentData = await documentResponse.json();
+    
+                if (documentData.status === "success") {
+                    console.log("Document saved successfully:", documentData);
+    
+                    // Sau khi lưu Document thành công, gọi API PrintJobController
+                    const printJobResponse = await fetch("http://127.0.0.1:8000/api/print-jobs", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            DocumentID: documentData.DocumentID, // ID tài liệu vừa lưu
+                            PrinterID: printerID,
+                            PaperSize: paperSize,
+                            Copies: parseInt(copies, 10), // Ép kiểu sang số nguyên
+                            IsDoubleSided: isDoubleSided, // Boolean
+                        }),
+                    });
+    
+                    const printJobData = await printJobResponse.json();
+    
+                    if (printJobData.status === "success") {
+                        console.log("Print job created successfully:", printJobData);
+                        setPopupSet(popupSets[2]);
+                        openPopupBox();
+                    } else {
+                        throw new Error(printJobData.message || "Có lỗi xảy ra khi tạo Print Job!");
+                    }
+                } else {
+                    throw new Error(documentData.message || "Có lỗi xảy ra khi lưu tài liệu!");
+                }
+            } catch (error) {
+                //console.error("Error:", error);
+                setPopupSet(popupSets[2]);
+                openPopupBox();
+            }
         }
     };
 

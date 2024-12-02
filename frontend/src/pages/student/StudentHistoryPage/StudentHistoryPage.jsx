@@ -93,7 +93,7 @@ const StudentHistoryPage = () => {
         {isLoading ? (
           <div className="loading-container">
             <span className="loading-text">Đang lấy lịch sử...</span>
-            
+
           </div>
         ) : (
           <span>{error}</span>
@@ -135,7 +135,7 @@ const StudentHistoryPage = () => {
                   {item.PrinterID}
                 </td>
                 <td className={clx('truncate')}>
-                  {item.StartTime}
+                  {item.EndTime}
                 </td>
                 <td className={clx('truncate')}>
                   {item.PagesPrinted}
@@ -144,7 +144,12 @@ const StudentHistoryPage = () => {
                   {item.Copies}
                 </td>
                 <td className={clx('status')}>
-                  <span className={clx('status-btn')}>Đã in</span>
+                  {item.EndTime ? (
+                     <span className={clx('status-btn')}>Đã in</span>
+                  ) : (
+                    <span className={clx('status-abc')}>Chưa in</span>
+                  )}
+                 
                 </td>
               </tr>
             ))}
@@ -152,7 +157,6 @@ const StudentHistoryPage = () => {
         </table>
 
         <div className={clx('pagination')}>
-          <div className={clx('text')}>Hiển thị 3/180 dòng</div>
           <div className={clx('buttons')}>
             <button className={clx('prev')}>&lt;-- Trước</button>
             <button className={clx('next')}>Sau --&gt;</button>

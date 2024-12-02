@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\PaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashBoardController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\PrinterController;
@@ -48,3 +49,4 @@ Route::put('/update-num-pages', [PrinterConfigurationController::class, 'updateN
 Route::put('/update-config-date', [PrinterConfigurationController::class, 'updateConfigDate']);
 Route::put('/update-allowed-file-types', [PrinterConfigurationController::class, 'updateAllowedFileTypes']);
 
+Route::get('/dashboard', [DashBoardController::class, 'get']);

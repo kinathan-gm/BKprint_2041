@@ -2,83 +2,129 @@ import classNames from "classnames/bind";
 import styles from './DashBoard.module.css'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightToBracket, faCaretUp, faCloudArrowUp, faFile, faPrint } from "@fortawesome/free-solid-svg-icons";
-import { ResponsiveContainer, XAxis, YAxis, BarChart, LineChart, Bar, Line, CartesianGrid, Legend, Tooltip} from 'recharts'
-import { useState } from "react";
-const clx = classNames.bind(styles); 
+import { ResponsiveContainer, XAxis, YAxis, BarChart, LineChart, Bar, Line, CartesianGrid, Legend, Tooltip } from 'recharts'
+import { useState, useEffect } from "react";
+const clx = classNames.bind(styles);
 
 function DashBoard() {
+
+    const [income, setIncome] = useState({});;
+
+    const [totalIncome, setTotalIncome] = useState([]);
+
+    const [totalJob, setTotalJob] = useState([]);
+    const [totalJobCompleted, setTotalJobCompleted] = useState([]);
+
+    const [totalPages, setTotalPages] = useState([]);
+
+    const [printers, setPrinters] = useState([]);
+
+    const getData = async (event) => {
+        event?.preventDefault();
+        try {
+            const response = await fetch('http://127.0.0.1:8000/api/dashboard', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                const formattedIncome = {
+                    Income8: parseFloat(data.Income?.Income8 || 0),
+                    Income9: parseFloat(data.Income?.Income9 || 0),
+                    Income10: parseFloat(data.Income?.Income10 || 0),
+                    Income11: parseFloat(data.Income?.Income11 || 0),
+                    Income12: parseFloat(data.Income?.Income12 || 0),
+                };
+
+                setIncome(formattedIncome);
+                setTotalIncome(data.totalIncome || []);
+                setTotalJob(data.printJobCount || []);
+                setTotalPages(data.totalPages || []);
+                setTotalJobCompleted(data.printJobCompletedCount || []);
+                setPrinters(data.printers || []);
+            }
+        }
+        catch (error) {
+
+        }
+    }
+    useEffect(() => {
+        getData();
+    }, []);
+
+
     const incomesData = [
-        { month: "Jan", incomes: 10 },
-        { month: "Feb", incomes: 15 },
-        { month: "Mar", incomes: 7 },
-        { month: "Apr", incomes: 20 },
-        { month: "May", incomes: 12 },
+        { month: "Aug", incomes: income.Income8 },
+        { month: "Sep", incomes: income.Income9 },
+        { month: "Oct", incomes: income.Income10 },
+        { month: "Nov", incomes: income.Income11 },
+        { month: "Dec", incomes: income.Income12 },
     ];
+    console.log(incomesData);
 
-    const printersData = [
-        { printer: "Printer_1", times: 84 },
-        { printer: "Printer_2", times: 104 },
-        { printer: "Printer_3", times: 344 },
-        { printer: "Printer_4", times: 281 },
-        { printer: "Printer_5", times: 320 },
-        { printer: "Printer_6", times: 442 },
-        { printer: "Printer_7", times: 325 },
-        { printer: "Printer_8", times: 498 },
-        { printer: "Printer_9", times: 413 },
-        { printer: "Printer_10",times: 156 }
-    ]
+    const printersData = printers.map((printer, index) => ({
+        printer: `${printer.Brand} ${printer.Model}`.length > 10
+            ? `${printer.Brand} ${printer.Model}`.slice(0, 10) + "..."
+            : `${printer.Brand} ${printer.Model}`,
+        fullPrinter: `${printer.Brand} ${printer.Model}`, // Lưu tên đầy đủ
+        times: [1, 2, 0, 2, 3, 0, 1, 2, 0, 1][index], // Dữ liệu times cho từng máy in
+    }));
 
-    const [accessData, setAccessData] = useState({data: 0, increase: true, progress: 0});
-    const [requestData, setRequestData] = useState({data: 0, increase: true, progress: 0});
-    const [printData, setPrintData] = useState({data: 0, increase: true, progress: 0});
-    const [pageData, setPageData] = useState({data: 0, increase: true, progress: 0});
+
+    const [accessData, setAccessData] = useState({ data: 0, increase: true, progress: 0 });
+    const [requestData, setRequestData] = useState({ data: 0, increase: true, progress: 0 });
+    const [printData, setPrintData] = useState({ data: 0, increase: true, progress: 0 });
+    const [pageData, setPageData] = useState({ data: 0, increase: true, progress: 0 });
 
     return (
         <div className={clx('wrapper')}>
             <div className={clx('container-1')}>
                 <div className={clx('data-window-container')}>
                     <div className={clx('data-window')}>
-                        <label className={clx('data-title')}>Số lượt truy cập</label>
+                        <label className={clx('data-title')}>Tổng doanh thu</label>
                         <div className={clx('data-container')}>
-                            <FontAwesomeIcon icon={faArrowRightToBracket} className={clx('data-icon', 'purple')}/>
-                            <label className={clx('data')}>710.000</label>
+                            <FontAwesomeIcon icon={faArrowRightToBracket} className={clx('data-icon', 'purple')} />
+                            <label className={clx('data')}>{totalIncome}</label>
                         </div>
                         <div className={clx('progress-container')}>
-                            <FontAwesomeIcon icon={faCaretUp} className={clx('progress-icon', {'increase': true, 'decrease': false})}/>
-                            <label className={clx('description')}><span className={clx('progress-data', {'increase': true, 'decrease': false})}>+10%</span>so với tháng trước</label>
+                            <FontAwesomeIcon icon={faCaretUp} className={clx('progress-icon', { 'increase': true, 'decrease': false })} />
+                            <label className={clx('description')}><span className={clx('progress-data', { 'increase': true, 'decrease': false })}>+10%</span>so với tháng trước</label>
                         </div>
                     </div>
                     <div className={clx('data-window')}>
                         <label className={clx('data-title')}>Số yêu cầu in</label>
                         <div className={clx('data-container')}>
-                            <FontAwesomeIcon icon={faCloudArrowUp} className={clx('data-icon', 'pink')}/>
-                            <label className={clx('data')}>1.000.000</label>
+                            <FontAwesomeIcon icon={faCloudArrowUp} className={clx('data-icon', 'pink')} />
+                            <label className={clx('data')}>{totalJob}</label>
                         </div>
                         <div className={clx('progress-container')}>
-                            <FontAwesomeIcon icon={faCaretUp} className={clx('progress-icon', {'increase': true, 'decrease': false})}/>
-                            <label className={clx('description')}><span className={clx('progress-data', {'increase': true, 'decrease': false})}>+10%</span>so với tháng trước</label>
+                            <FontAwesomeIcon icon={faCaretUp} className={clx('progress-icon', { 'increase': true, 'decrease': false })} />
+                            <label className={clx('description')}><span className={clx('progress-data', { 'increase': true, 'decrease': false })}>+10%</span>so với tháng trước</label>
                         </div>
                     </div>
                     <div className={clx('data-window')}>
                         <label className={clx('data-title')}>Số lượt in</label>
                         <div className={clx('data-container')}>
-                            <FontAwesomeIcon icon={faPrint} className={clx('data-icon', 'blue')}/>
-                            <label className={clx('data')}>200.000</label>
+                            <FontAwesomeIcon icon={faPrint} className={clx('data-icon', 'blue')} />
+                            <label className={clx('data')}>{totalJobCompleted}</label>
                         </div>
                         <div className={clx('progress-container')}>
-                            <FontAwesomeIcon icon={faCaretUp} className={clx('progress-icon', {'increase': true, 'decrease': false})}/>
-                            <label className={clx('description')}><span className={clx('progress-data', {'increase': true, 'decrease': false})}>+10%</span>so với tháng trước</label>
+                            <FontAwesomeIcon icon={faCaretUp} className={clx('progress-icon', { 'increase': true, 'decrease': false })} />
+                            <label className={clx('description')}><span className={clx('progress-data', { 'increase': true, 'decrease': false })}>+10%</span>so với tháng trước</label>
                         </div>
                     </div>
                     <div className={clx('data-window')}>
                         <label className={clx('data-title')}>Số trang in</label>
                         <div className={clx('data-container')}>
-                            <FontAwesomeIcon icon={faFile} className={clx('data-icon', 'golden')}/>
-                            <label className={clx('data')}>980.000</label>
+                            <FontAwesomeIcon icon={faFile} className={clx('data-icon', 'golden')} />
+                            <label className={clx('data')}>{totalPages}</label>
                         </div>
                         <div className={clx('progress-container')}>
-                            <FontAwesomeIcon icon={faCaretUp} className={clx('progress-icon', {'increase': true, 'decrease': false})}/>
-                            <label className={clx('description')}><span className={clx('progress-data', {'increase': true, 'decrease': false})}>+10%</span>so với tháng trước</label>
+                            <FontAwesomeIcon icon={faCaretUp} className={clx('progress-icon', { 'increase': true, 'decrease': false })} />
+                            <label className={clx('description')}><span className={clx('progress-data', { 'increase': true, 'decrease': false })}>+10%</span>so với tháng trước</label>
                         </div>
                     </div>
                 </div>
@@ -106,8 +152,22 @@ function DashBoard() {
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="printer" />
                             <YAxis />
-                            <Tooltip />
+                            <Tooltip
+                                content={({ active, payload }) => {
+                                    if (active && payload && payload.length) {
+                                        return (
+                                            <div style={{ backgroundColor: "white", padding: "5px", border: "1px solid #ccc" }}>
+                                                <p>{payload[0].payload.fullPrinter}</p> {/* Hiển thị tên đầy đủ */}
+                                                <p>Số lần sử dụng: {payload[0].payload.times}</p>
+                                            </div>
+                                        );
+                                    }
+                                    return null;
+                                }}
+                            />
+
                             <Legend />
+
                             <Bar dataKey="times" fill="orangered" barSize={30} />
                         </BarChart>
                     </ResponsiveContainer>

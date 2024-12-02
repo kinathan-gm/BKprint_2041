@@ -89,7 +89,7 @@ function HistoryPage() {
   const [history, setHistory] = useState([]);
   const [document, setDocument] = useState([]);
   const user_id = localStorage.getItem('user_id');
-  const [isLoading, setIsLoading] = useState(false); // Trạng thái loading
+  const [isLoading, setIsLoading] = useState(false);
 
   const getHistory = async (event) => {
     event?.preventDefault(); // Chỉ gọi event.preventDefault() nếu có event
@@ -177,9 +177,13 @@ function HistoryPage() {
   const [searchResults, setSearchResults] = useState([]);
 
   const handleSearch = (searchData) => {
-    console.log(searchData);
+    const email = searchData.email.trim();
+    if (!email) {
+      setSearchResults([...history]);
+      return;
+    }
     const filteredData = history.filter(item =>{
-      const matchesEmail = item.Email.includes(searchData.email);
+      const matchesEmail = item.Email.includes(email);
       return matchesEmail   ;
     }
     );

@@ -7,10 +7,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { Link } from "react-router-dom";
 const clx = classNames.bind(styles);
+
 function SearchBar({onSearch}) {
   const [email, setEmail] = useState('');
   const [dateFrom, setDateFrom] = useState("2024-11-30");
   const [dateTo, setDateTo] = useState("2024-11-30");
+
   const handleFromChange = (event) => {
     setDateFrom(event.target.value);
   };
@@ -21,7 +23,7 @@ function SearchBar({onSearch}) {
     setEmail(event.target.value);
   };
   const handleSearch = () => {
-    onSearch({ email});
+    onSearch({email});
   };
   return (
     <div className={clx("conchim")}>
@@ -54,8 +56,10 @@ function SearchBar({onSearch}) {
         <button onClick={handleSearch}>Tìm kiếm</button>
       </div>
     </div>
+
   );
 }
+
 function Pagination({ currentPage, totalPages, onPageChange }) {
   return (
     <div className={clx("page")}>
@@ -79,12 +83,14 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
     </div>
   );
 }
+
 function HistoryPage() {
   const [error, setError] = useState(''); // Để hiển thị lỗi (nếu có)
   const [history, setHistory] = useState([]);
   const [document, setDocument] = useState([]);
   const user_id = localStorage.getItem('user_id');
   const [isLoading, setIsLoading] = useState(false); // Trạng thái loading
+
   const getHistory = async (event) => {
     event?.preventDefault(); // Chỉ gọi event.preventDefault() nếu có event
     setIsLoading(true);
@@ -97,11 +103,15 @@ function HistoryPage() {
       });
       setError('Đang lấy lịch sử...');
       const data = await response.json();
+
       if (data.status === 'success') {
         // // setHistory(data.history || []);
+
         const modifiedHistory = [...data.history];
+
         for (let i = 0; i < data.history.length; i++) {
           const item = data.history[i];
+
           try {
             const response = await fetch('http://127.0.0.1:8000/api/document?id=' + item.DocumentID, {
               method: 'GET',
@@ -109,15 +119,20 @@ function HistoryPage() {
                 'Content-Type': 'application/json',
               },
             });
+
             const response2 = await fetch('http://127.0.0.1:8000/api/printer?id=' + item.PrinterID, {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
               },
             });
+
             const printerData = await response2.json();
+
             const documentData = await response.json();
+
             const StudentID = documentData.document.StudentID;
+
             const response3 = await fetch('http://127.0.0.1:8000/api/getStudent?id=' + StudentID, {
               method: 'GET',
               headers: {
@@ -125,6 +140,7 @@ function HistoryPage() {
               },
             });
             const StudentData = await response3.json();
+
             if (documentData.status === 'success' && printerData.status === 'success') {
               modifiedHistory[i] = {
                 ...item,
@@ -144,6 +160,8 @@ function HistoryPage() {
             setIsLoading(false);
           }
         }
+
+
         setHistory(modifiedHistory);
         setSearchResults(modifiedHistory);
         setError(data.message || 'Lấy lịch sử thành công');
@@ -151,21 +169,28 @@ function HistoryPage() {
         setError(data.message || 'Lấy lịch sử thất bại');
       }
     } catch (error) {
+
       setError('Đã có lỗi xảy ra khi lấy lịch sử, vui lòng thử lại!');
     }
   };
+
   const [searchResults, setSearchResults] = useState([]);
-  
+
   const handleSearch = (searchData) => {
     console.log(searchData);
-    const filteredData = history.filter(item =>
-      item.Email.includes(searchData.email) // search by email
+    const filteredData = history.filter(item =>{
+      const matchesEmail = item.Email.includes(searchData.email);
+      return matchesEmail   ;
+    }
     );
     setSearchResults(filteredData);
   };
+
+
   useEffect(() => {
     getHistory();
   }, []);
+
   return (
     <div className={clx("wrapper")}>
       <h2 style={{ fontSize: '40px', color: '#696969' }}>LỊCH SỬ IN</h2>
@@ -188,6 +213,7 @@ function HistoryPage() {
               <td>{index + 1}</td>
               <td>{item.Student}</td>
               <td>{item.Email}</td>
+
               <td>
                 <Link to="#">{item.DocumentID}</Link>
               </td>
@@ -202,4 +228,5 @@ function HistoryPage() {
     </div>
   );
 }
+
 export default HistoryPage;

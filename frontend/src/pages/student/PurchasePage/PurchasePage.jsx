@@ -65,7 +65,7 @@ const PurchasePage = () => {
 
       // Cập nhật số dư và số trang còn lại từ phản hồi API
       const { balancePage } = response.data;
-      setRemainingPages(balancePage);
+      setRemainingPages(remainingPages + pagesToBuy);
       setUserBalance(userBalance - totalFee); // Giảm số dư hiện tại
       setPopupType("success");
     } catch (error) {

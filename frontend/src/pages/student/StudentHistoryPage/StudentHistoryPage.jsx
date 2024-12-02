@@ -124,7 +124,6 @@ const StudentHistoryPage = () => {
               <th>Số trang</th>
               <th>Số bản</th>
               <th>Trạng thái</th>
-              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -146,9 +145,6 @@ const StudentHistoryPage = () => {
                 </td>
                 <td className={clx('status')}>
                   <span className={clx('status-btn')}>Đã in</span>
-                </td>
-                <td>
-                  <button className={clx('btn-cancel')}>Hủy</button>
                 </td>
               </tr>
             ))}

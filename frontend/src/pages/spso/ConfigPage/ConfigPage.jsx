@@ -20,7 +20,7 @@ const ConfigPage = () => {
   });
 
   useEffect(() => {
-    fetch("/api/printer-config")
+    fetch("http://127.0.0.1:8000/api/printer-config")
       .then((response) => response.json())
       .then((data) => {
         if (data.config) {
@@ -50,7 +50,7 @@ const ConfigPage = () => {
       setNumPages(parseInt(inputValue, 10));
       setInputValue("");
 
-      fetch('/api/update-num-pages', {
+      fetch('http://127.0.0.1:8000/api/update-num-pages', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -74,7 +74,7 @@ const ConfigPage = () => {
   const handleDateUpdate = () => {
     setDate(tempDate);
 
-    fetch('/api/update-config-date', {
+    fetch('http://127.0.0.1:8000/api/update-config-date', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ const ConfigPage = () => {
     const handleFileTypesUpdate = () => {
       const allowedFileTypes = Object.keys(allowedTypes).filter((type) => allowedTypes[type]);
     
-      fetch('/api/update-allowed-file-types', {
+      fetch('http://127.0.0.1:8000/api/update-allowed-file-types', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

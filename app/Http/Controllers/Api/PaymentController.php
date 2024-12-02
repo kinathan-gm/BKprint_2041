@@ -13,7 +13,7 @@ class PaymentController extends Controller
     public function getBalancePage($idStudent)
     {
         $student = Student::findOrFail($idStudent);
-        return response()->json(['balancePage' => $student->BalancePage], 200);
+        return response()->json(['balancePage' => $student->PageBalance], 200);
     }
     public function paymentPage(Request $request, $idStudent)
     {
@@ -26,7 +26,7 @@ class PaymentController extends Controller
         $page = $request->input('page');
 
         // Thực hiện các thao tác với thông tin nhận được
-        $student->BalancePage += $page;
+        $student->PageBalance += $page;
         $student->save();
 
         $payment = new Payment();

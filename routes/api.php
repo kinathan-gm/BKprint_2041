@@ -9,7 +9,6 @@ use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\PrinterController;
 
 use App\Http\Controllers\PrintJobController;
-use App\Http\Controllers\DocumentController;
 
 
 use App\Http\Controllers\StudentController;

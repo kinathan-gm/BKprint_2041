@@ -1,0 +1,181 @@
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  background: #fff;
+  border-radius: 8px;
+  padding: 40px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  flex-direction: column; 
+  justify-content: center;
+}
+
+
+.title {
+  font-size: 40px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 30px;
+}
+
+
+.alert-success {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #e7f5ff;
+  color: #1c7ed6;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.loading-text {
+  font-size: 16px;
+  color: #1c7ed6;
+  display: inline-block;
+  animation: blink 1.5s ease-in-out infinite;
+}
+
+
+.search-box {
+  position: relative;
+  padding: 2rem 0rem;
+}
+
+.search-input {
+  width: 30%;
+  padding: 1rem 2rem;  
+  border: 1px solid #D1D5DB;
+  border-radius: 9999px;
+  outline: none;
+  box-sizing: border-box;
+  font-size: 1.88rem;  
+}
+
+.search-input:focus {
+  border-color: #3B82F6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+.search-icon {
+  position: absolute;
+  left: 1.68rem;  
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6B7280;
+}
+
+.icon {
+  width: 2.94rem;  
+  height: 2.94rem;
+}
+
+.table-container {
+  width: 110rem;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 2rem;  
+  text-align: left;
+  font-size: 1.68rem;  
+  color: #4B5563;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+th {
+  background-color: #F3F4F6;
+}
+
+td.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  
+}
+
+.status-btn {
+
+  background-color: #10B981;
+  color: white;
+  padding: 1rem 2rem;  
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1.68rem;  
+}
+
+.btn-cancel {
+  background-color: #eb4444;
+  color: white;
+  padding: 1rem 2rem;  
+  border-radius: 10px;
+  border-color: #d64343;
+  cursor: pointer;
+  font-size: 1.68rem;  
+}
+
+.btn-cancel:hover {
+  background-color: #d64343;;
+}
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2.52rem;
+  padding-bottom: 0rem;
+  padding-top: 6rem;
+}
+
+.text {
+  font-size: 1.68rem;   
+  color: #6B7280;
+}
+
+.buttons {
+  display: flex;
+  gap: 1.68rem;  
+}
+
+button {
+  padding: 1rem 3rem;  
+  font-size: 1.68rem;  
+  border-radius: 0.84rem;  
+  cursor: pointer;
+  border: none;
+  font-size: 16px;
+}
+
+button.prev {
+  background-color: #ccced3;
+  color: #ffffff;
+  border-radius: 20px;
+
+}
+
+button.prev:hover {
+  background-color: #E5E7EB;
+}
+
+button.next {
+  background-color: #3B82F6;
+  color: #ffffff;
+  border-radius: 20px;
+}
+
+button.next:hover {
+  background-color: #2563EB;
+}

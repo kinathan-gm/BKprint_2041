@@ -1,12 +1,13 @@
 .wrapper{
     display: flex;
-    height: 90%;
     flex-direction: column;
-    background-color: #F3F4F6;
+    background-color: #ffffff;
+
     border-radius: 20px;
     width: 90%;
     padding-left: 40px;
     padding-right: 40px;
+    padding-bottom: 40px;
 }
 .search-bar-wrapper {
     position: relative;
@@ -28,6 +29,8 @@
     border-radius: 20px;
     font-weight: 500;
     font-size: 20px;
+    margin-right: 20px;
+
   }
 .history-table {
     width: 100%;

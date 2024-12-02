@@ -11,7 +11,7 @@ class PrinterConfig extends Model
     use HasFactory;
 
     protected $table = 'printer_configurations';
-    protected $primaryKey = 'ConfigID ';
+    protected $primaryKey = 'ConfigID';
     protected $fillable = [
         'SPSOID',
         'PrinterID',

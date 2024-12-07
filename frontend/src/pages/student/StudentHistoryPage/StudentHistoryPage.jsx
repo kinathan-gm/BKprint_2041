@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import classNames from 'classnames/bind';
 import SecondaryButton from '../../../component/SecondaryButton.jsx';
 import styles from './StudentHistoryPage.module.css';
+import { saveAs } from 'file-saver';
 
 const clx = classNames.bind(styles);
 
@@ -11,6 +12,28 @@ const StudentHistoryPage = () => {
   const [document, setDocument] = useState([]);
   const user_id = localStorage.getItem('user_id');
   const [isLoading, setIsLoading] = useState(false); // Trạng thái loading
+
+  const handleDownload = async (documentID) => {
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/api/download/${documentID}`, {
+        method: 'GET',
+      });
+  
+      if (!response.ok) {
+        throw new Error('Tải xuống thất bại');
+      }
+  
+      const blob = await response.blob();
+      
+      // Sử dụng FileSaver.js để tải xuống tệp
+      saveAs(blob, `${documentID}.pdf`);
+    } catch (error) {
+      console.error('Lỗi tải xuống:', error);
+      alert('Đã xảy ra lỗi khi tải file.');
+    }
+  };
+
+
   const getHistory = async (event) => {
     event?.preventDefault(); // Chỉ gọi event.preventDefault() nếu có event
     setIsLoading(true);
@@ -130,7 +153,15 @@ const StudentHistoryPage = () => {
             {history.map((item, index) => (
               <tr key={item.PrintJobID}>
                 <td className={clx('truncate')}>{index + 1}</td>
-                <td className={clx('truncate')}>{item.DocumentID}</td>
+                <td className={clx('truncate')}>
+                  <button
+                    className={clx('download-btn')}
+                    onClick={() => handleDownload(item.DocumentID)}
+                  >
+                    
+                    {item.DocumentID}
+                  </button>
+                </td>
                 <td className={clx('truncate')}>
                   {item.PrinterID}
                 </td>
@@ -145,11 +176,11 @@ const StudentHistoryPage = () => {
                 </td>
                 <td className={clx('status')}>
                   {item.EndTime ? (
-                     <span className={clx('status-btn')}>Đã in</span>
+                    <span className={clx('status-btn')}>Đã in</span>
                   ) : (
                     <span className={clx('status-abc')}>Chưa in</span>
                   )}
-                 
+
                 </td>
               </tr>
             ))}

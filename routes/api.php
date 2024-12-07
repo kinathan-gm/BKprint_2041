@@ -6,14 +6,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashBoardController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\PrinterController;
 use App\Http\Controllers\PrintJobController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\PrinterConfigurationController;
 use App\Http\Controllers\FileUploadController;
-
-
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/printers', [PrinterController::class, 'getPrinters']);
@@ -47,3 +46,4 @@ Route::put('/update-allowed-file-types', [PrinterConfigurationController::class,
 Route::get('/dashboard', [DashBoardController::class, 'get']);
 
 Route::post('/upload', [FileUploadController::class, 'upload']);
+Route::get('/download/{filename}', [FileController::class, 'download']);

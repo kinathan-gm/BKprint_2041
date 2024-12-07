@@ -6,6 +6,8 @@ import classNames from "classnames/bind";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { Link } from "react-router-dom";
+import { saveAs } from 'file-saver';
+
 const clx = classNames.bind(styles);
 
 function SearchBar({onSearch}) {
@@ -25,6 +27,8 @@ function SearchBar({onSearch}) {
   const handleSearch = () => {
     onSearch({email});
   };
+
+
   return (
     <div className={clx("conchim")}>
       <div className={clx("search-bar-wrapper")}>
@@ -85,11 +89,33 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
 }
 
 function HistoryPage() {
+
   const [error, setError] = useState(''); // Để hiển thị lỗi (nếu có)
   const [history, setHistory] = useState([]);
   const [document, setDocument] = useState([]);
   const user_id = localStorage.getItem('user_id');
   const [isLoading, setIsLoading] = useState(false);
+
+  
+  const handleDownload = async (documentID) => {
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/api/download/${documentID}`, {
+        method: 'GET',
+      });
+  
+      if (!response.ok) {
+        throw new Error('Tải xuống thất bại');
+      }
+  
+      const blob = await response.blob();
+      
+      // Sử dụng FileSaver.js để tải xuống tệp
+      saveAs(blob, `${documentID}.pdf`);
+    } catch (error) {
+      console.error('Lỗi tải xuống:', error);
+      alert('Đã xảy ra lỗi khi tải file.');
+    }
+  };
 
   const getHistory = async (event) => {
     event?.preventDefault(); // Chỉ gọi event.preventDefault() nếu có event
@@ -219,7 +245,13 @@ function HistoryPage() {
               <td>{item.Email}</td>
 
               <td>
-                <Link to="#">{item.DocumentID}</Link>
+                <button
+                    className={clx('download-btn')}
+                    onClick={() => handleDownload(item.DocumentID)}
+                  >
+                    
+                    {item.DocumentID}
+                  </button>
               </td>
               <td>{item.StartTime}</td>
               <td>{item.PrinterID}</td>

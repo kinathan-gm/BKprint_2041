@@ -9,7 +9,7 @@ import AuthLayout from './component/Layout/AuthLayout/AuthLayout'
 import PrintingPage from './pages/student/PrintingPage/PrintingPage'
 import PurchasePage from './pages/student/PurchasePage/PurchasePage'
 import DashBoard from './pages/spso/DashBoard/DashBoard'
-import SpsoHistory from './pages/spso/History/History'
+import SpsoHistory from './pages/spso/History/History'  
 import { Route, Routes } from 'react-router-dom'
 import HomePage from './pages/homePage/Homepage'
 

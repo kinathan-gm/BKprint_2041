@@ -8,15 +8,10 @@ use App\Http\Controllers\DashBoardController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\PrinterController;
-
 use App\Http\Controllers\PrintJobController;
-
-
 use App\Http\Controllers\StudentController;
-
 use App\Http\Controllers\PrinterConfigurationController;
-
-
+use App\Http\Controllers\FileUploadController;
 
 
 
@@ -50,3 +45,5 @@ Route::put('/update-config-date', [PrinterConfigurationController::class, 'updat
 Route::put('/update-allowed-file-types', [PrinterConfigurationController::class, 'updateAllowedFileTypes']);
 
 Route::get('/dashboard', [DashBoardController::class, 'get']);
+
+Route::post('/upload', [FileUploadController::class, 'upload']);

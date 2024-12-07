@@ -7,17 +7,16 @@ import { Link } from "react-router-dom";
 
 const clx = classNames.bind(styles)
 
-function PrintingPage(){
+function PrintingPage() {
     const fileInputRef = useRef();
-
     const [file, setFile] = useState(null);
     const [side, setSide] = useState(1);
     const [popup, setPopup] = useState(false);
     const [popupset, setPopupSet] = useState({});
-    const [fileset, setFileSet] = useState({icon: faFile, theme: 'default-theme'});
+    const [fileset, setFileSet] = useState({ icon: faFile, theme: 'default-theme' });
     const [printers, setPrinters] = useState([]); // Danh sách máy in từ API
     const [allowedFileTypes, setAllowedFileTypes] = useState([]);
-   
+
     // const printers = ['001 - CS2 - H6 - Tầng 1', '002 - CS2 - H6 - Tầng 1', '003 - CS2 - H6 - Tầng 1' ];
     const user = JSON.parse(localStorage.getItem("user")); // Parse JSON
     const studentID = user?.StudentID || null; // Lấy StudentID hoặc trả về null nếu không có
@@ -127,7 +126,7 @@ function PrintingPage(){
 
     const clearFile = () => {
         setFile(null);
-        setFileSet({icon: faFile, theme: 'default-theme'});
+        setFileSet({ icon: faFile, theme: 'default-theme' });
         if (fileInputRef.current) {
             fileInputRef.current.value = '';
         }
@@ -149,9 +148,9 @@ function PrintingPage(){
         const fileExtension = file.name.split('.').pop().toUpperCase();
         const printerID = document.getElementById('printer-cb').value; // Lấy PrinterID từ combo box
         const paperSize = document.getElementById('paper-cb').value; // Lấy khổ giấy
-        const isDoubleSided = side === 2 ? true : false; // 0: 1 mặt, 1: 2 mặt
+        const isDoubleSided = ((side === 2) ? 1 : 0); // 0: 1 mặt, 1: 2 mặt
         const copies = document.getElementById('copies-nbox').value; // Số bản in
-    
+
         console.log({
             fileName,
             fileExtension,
@@ -161,7 +160,7 @@ function PrintingPage(){
             isDoubleSided,
             copies,
         });
-    
+
         if (file === null) {
             openPopupBox();
         } else if (!allowedFileTypes.includes(fileExtension)) {
@@ -184,180 +183,206 @@ function PrintingPage(){
                         FileType: fileExtension,
                     }),
                 });
-    
+
                 const documentData = await documentResponse.json();
-    
+
                 if (documentData.status === "success") {
                     console.log("Document saved successfully:", documentData);
-    
-                    // Sau khi lưu Document thành công, gọi API PrintJobController
+
                     const printJobResponse = await fetch("http://127.0.0.1:8000/api/print-jobs", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
                         },
                         body: JSON.stringify({
-                            DocumentID: documentData.DocumentID, // ID tài liệu vừa lưu
+                            DocumentID: documentData.DocumentID,
                             PrinterID: printerID,
                             PaperSize: paperSize,
-                            Copies: parseInt(copies, 10), // Ép kiểu sang số nguyên
-                            IsDoubleSided: isDoubleSided, // Boolean
+                            Copies: parseInt(copies, 10),
+                            IsDoubleSided: isDoubleSided,
                         }),
                     });
-    
+
                     const printJobData = await printJobResponse.json();
-    
+
                     if (printJobData.status === "success") {
                         console.log("Print job created successfully:", printJobData);
-                        setPopupSet(popupSets[2]);
-                        openPopupBox();
-                    } else {
-                        throw new Error(printJobData.message || "Có lỗi xảy ra khi tạo Print Job!");
-                    }
-                } else {
-                    throw new Error(documentData.message || "Có lỗi xảy ra khi lưu tài liệu!");
-                }
-            } catch (error) {
-                //console.error("Error:", error);
-                setPopupSet(popupSets[2]);
-                openPopupBox();
-            }
-        }
-    };
 
-    return (
-        <div className={clx('wrapper')}>
-            <div className={clx('file-container')}>
-                <h2>Tải tệp lên</h2>
-                {file === null ? (
-                    <div className={clx('file-area')}>
-                        <h3>Tải tài liệu lên</h3>
-                        <FontAwesomeIcon className={clx('cloud')} icon={faCloudArrowUp}/>
-                        <p><span>Định dạng cho phép:</span> {allowedFileTypes.join(", ")}</p>
-                        <p><span>Kích thước tối đa:</span>100MB</p>
-                    </div>
-                ):(
-                    <div className={clx('file-area')}>
-                        <FontAwesomeIcon icon={fileset.icon} className={clx('file-icon', fileset.theme)}/>
-                        <a download={file.name} href={URL.createObjectURL(file)} className={clx('file-name')}>{file.name}</a>
-                    </div>
-                )}
-                <div className={clx('file-input')}>
-                    <input ref={fileInputRef} onChange={(e) => showFile(e)} type="file" id='file' className={clx("file-input__input")}/>
-                    <label htmlFor="file" className={clx("file-input__label")}>
-                        Tải lên
-                    </label>
+                        if (!file) {
+                            alert("Vui lòng chọn tệp trước khi tải lên.");
+                            return;
+                        }
+
+                        const formData = new FormData();
+                        formData.append('file', file); 
+                        formData.append('studentId', studentID);
+                        
+                        try {
+                            const response = await fetch("http://127.0.0.1:8000/api/upload", {
+                                method: "POST",
+                                body: formData, 
+                            });
+
+                            if (response.ok) {
+                                alert("Tệp đã được tải lên thành công");                 
+                                setFile(null); 
+                            } else {
+                                alert("Đã xảy ra lỗi khi tải tệp lên.");
+                            }
+                        } catch (error) {
+                            console.error("Lỗi tải tệp:", error);
+                            alert("Đã có lỗi xảy ra. Vui lòng thử lại.");
+                        }
+                
+                    // setPopupSet(popupSets[2]);
+                    // openPopupBox();
+                } else {
+                    throw new Error(printJobData.message || "Có lỗi xảy ra khi tạo Print Job!");
+                }
+            } else {
+                throw new Error(documentData.message || "Có lỗi xảy ra khi lưu tài liệu!");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            // setPopupSet(popupSets[2]);
+            // openPopupBox();
+        }
+    }
+};
+
+return (
+    <div className={clx('wrapper')}>
+        <div className={clx('file-container')}>
+            <h2>Tải tệp lên</h2>
+            {file === null ? (
+                <div className={clx('file-area')}>
+                    <h3>Tải tài liệu lên</h3>
+                    <FontAwesomeIcon className={clx('cloud')} icon={faCloudArrowUp} />
+                    <p><span>Định dạng cho phép:</span> {allowedFileTypes.join(", ")}</p>
+                    <p><span>Kích thước tối đa:</span>100MB</p>
                 </div>
+            ) : (
+                <div className={clx('file-area')}>
+                    <FontAwesomeIcon icon={fileset.icon} className={clx('file-icon', fileset.theme)} />
+                    <a download={file.name} href={URL.createObjectURL(file)} className={clx('file-name')}>{file.name}</a>
+                </div>
+            )}
+            <div className={clx('file-input')}>
+                <input ref={fileInputRef} onChange={(e) => showFile(e)} type="file" id='file' className={clx("file-input__input")} />
+                <label htmlFor="file" className={clx("file-input__label")}>
+                    Tải lên
+                </label>
             </div>
-            <div className={clx('props-container')}>
-                <h2>Thuộc tính trang in</h2>
-                <form className={clx('props-form')} onSubmit={(e) => handleFormSubmit(e)}>
-                    <fieldset disabled={file === null} >
-                        <div className={clx('printer-field')}>
-                            <label htmlFor="printer-cb" className={clx('input-label', 'text-bold')}>Chọn máy in</label>
-                            <div className={clx('combo-box', 'width-large')} >
-                                <select id="printer-cb">
-                                    {printers.map((printer, index) => (
-                                        <option key={index} value={printer.PrinterID}>
-                                            {printer.Brand} - {printer.Model} ({printer.CampusName} - {printer.BuildingName} - {printer.RoomNumber})
-                                        </option>
+        </div>
+        <div className={clx('props-container')}>
+            <h2>Thuộc tính trang in</h2>
+            <form className={clx('props-form')} onSubmit={(e) => handleFormSubmit(e)}>
+                <fieldset disabled={file === null} >
+                    <div className={clx('printer-field')}>
+                        <label htmlFor="printer-cb" className={clx('input-label', 'text-bold')}>Chọn máy in</label>
+                        <div className={clx('combo-box', 'width-large')} >
+                            <select id="printer-cb">
+                                {printers.map((printer, index) => (
+                                    <option key={index} value={printer.PrinterID}>
+                                        {printer.Brand} - {printer.Model} ({printer.CampusName} - {printer.BuildingName} - {printer.RoomNumber})
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+                    <div className={clx('paper-field')}>
+                        <div className={clx('paper-cbbox')}>
+                            <label htmlFor="paper-cb" className={clx('input-label', 'text-bold')}>Khổ giấy</label>
+                            <div className={clx('combo-box', 'width-medium')} >
+                                <select id="paper-cb">
+                                    {papers.map((paper, index) => (
+                                        <option key={index}>{paper}</option>
                                     ))}
                                 </select>
                             </div>
                         </div>
-                        <div className={clx('paper-field')}>
-                            <div className={clx('paper-cbbox')}>
-                                <label htmlFor="paper-cb" className={clx('input-label', 'text-bold')}>Khổ giấy</label>
-                                <div className={clx('combo-box', 'width-medium')} >
-                                    <select id="paper-cb">
-                                        {papers.map((paper,index) => (
-                                            <option key={index}>{paper}</option>
-                                        ))}
-                                    </select>
+                        <div className={clx('orient-cbbox')}>
+                            <label htmlFor="orient-cb" className={clx('input-label', 'text-bold')}>Hướng</label>
+                            <div className={clx('combo-box', 'width-medium')} >
+                                <select id="orient-cb">
+                                    <option>Dọc</option>
+                                    <option>Ngang</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div className={clx('print-field')}>
+                        <div className={clx('copies-box')}>
+                            <label htmlFor="copies-nbox" className={clx('input-label', 'text-bold')}>Số bản in</label>
+                            <div className={clx('number-box', 'width-medium')}>
+                                <input type="number" id="copies-nbox" defaultValue={1} min={1} required />
+                            </div>
+                        </div>
+                        <div className={clx('radio-box')}>
+                            <input className={clx('radio-input')} onChange={() => { setSide(1) }} checked={side === 1} type="radio" id='radio1' />
+                            <label className={clx('input-label', 'text-bold')} htmlFor="radio1">In 1 mặt</label>
+                        </div>
+                        <div className={clx('radio-box')}>
+                            <input className={clx('radio-input')} onChange={() => { setSide(2) }} checked={side === 2} type="radio" id="radio2" />
+                            <label className={clx('input-label', 'text-bold')} htmlFor="radio2">In 2 mặt</label>
+                        </div>
+                    </div>
+                    <div className={clx('margin-field')}>
+                        <label className={clx('input-label', 'text-bold')}>Căn lề</label>
+                        <div className={clx('margin-lr')}>
+                            <div className={clx('margin-nbox')}>
+                                <label htmlFor="lmargin-box" className={clx('input-label', 'text-normal')}>Trái</label>
+                                <div className={clx('number-box', 'small')}>
+                                    <input type="number" id='lmargin-box' defaultValue={0} min={0} step={0.25} required />
+                                    <label className={clx('unit')} htmlFor="lmargin-box">inches</label>
                                 </div>
                             </div>
-                            <div className={clx('orient-cbbox')}>
-                                <label htmlFor="orient-cb" className={clx('input-label', 'text-bold')}>Hướng</label>
-                                <div className={clx('combo-box', 'width-medium')} >
-                                    <select id="orient-cb">
-                                        <option>Dọc</option>
-                                        <option>Ngang</option>
-                                    </select>
+                            <div className={clx('margin-nbox')}>
+                                <label htmlFor="rmargin-box" className={clx('input-label', 'text-normal')}>Phải</label>
+                                <div className={clx('number-box', 'small')} >
+                                    <input type="number" id='rmargin-box' defaultValue={0} min={0} step={0.25} required />
+                                    <label className={clx('unit')} htmlFor="rmargin-box">inches</label>
                                 </div>
                             </div>
                         </div>
-                        <div className={clx('print-field')}>
-                            <div className={clx('copies-box')}>
-                                <label htmlFor="copies-nbox" className={clx('input-label', 'text-bold')}>Số bản in</label>
-                                <div className={clx('number-box', 'width-medium')}>
-                                    <input type="number" id="copies-nbox" defaultValue={1} min={1} required/>
+                        <div className={clx('margin-tb')}>
+                            <div className={clx('margin-nbox')}>
+                                <label htmlFor="tmargin-box" className={clx('input-label', 'text-normal')}>Trên</label>
+                                <div className={clx('number-box', 'small')} >
+                                    <input type="number" id='tmargin-box' defaultValue={0} min={0} step={0.25} required />
+                                    <label className={clx('unit')} htmlFor="tmargin-box">inches</label>
                                 </div>
                             </div>
-                            <div className={clx('radio-box')}>
-                                <input className={clx('radio-input')} onChange={() => {setSide(1)}} checked={side === 1} type="radio" id='radio1'/>
-                                <label className={clx('input-label', 'text-bold')} htmlFor="radio1">In 1 mặt</label>
-                            </div>
-                            <div className={clx('radio-box')}>
-                                <input className={clx('radio-input')} onChange={() => {setSide(2)}} checked={side === 2} type="radio" id="radio2"/>
-                                <label className={clx('input-label', 'text-bold')} htmlFor="radio2">In 2 mặt</label>
-                            </div>
-                        </div>
-                        <div className={clx('margin-field')}>
-                            <label className={clx('input-label', 'text-bold')}>Căn lề</label>
-                            <div className={clx('margin-lr')}>
-                                <div className={clx('margin-nbox')}>
-                                    <label htmlFor="lmargin-box" className={clx('input-label', 'text-normal')}>Trái</label>
-                                    <div className={clx('number-box', 'small')}>
-                                        <input type="number" id='lmargin-box' defaultValue={0} min={0} step={0.25} required/>
-                                        <label className={clx('unit')} htmlFor="lmargin-box">inches</label>
-                                    </div>
-                                </div>
-                                <div className={clx('margin-nbox')}>
-                                    <label htmlFor="rmargin-box" className={clx('input-label', 'text-normal')}>Phải</label>
-                                    <div className={clx('number-box', 'small')} >
-                                        <input type="number" id='rmargin-box' defaultValue={0} min={0} step={0.25} required/>
-                                        <label className={clx('unit')} htmlFor="rmargin-box">inches</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className={clx('margin-tb')}>
-                                <div className={clx('margin-nbox')}>
-                                    <label htmlFor="tmargin-box" className={clx('input-label', 'text-normal')}>Trên</label>
-                                    <div className={clx('number-box', 'small')} >
-                                        <input type="number" id='tmargin-box' defaultValue={0} min={0} step={0.25} required/>
-                                        <label className={clx('unit')} htmlFor="tmargin-box">inches</label>
-                                    </div>
-                                </div>
-                                <div className={clx('margin-nbox')}>
-                                    <label htmlFor="bmargin-box" className={clx('input-label', 'text-normal')}>Dưới</label>
-                                    <div className={clx('number-box', 'small')} >
-                                        <input type="number" id='bmargin-box' defaultValue={0}  min={0} step={0.25} required/>
-                                        <label className={clx('unit')} htmlFor="bmargin-box">inches</label>
-                                    </div>
+                            <div className={clx('margin-nbox')}>
+                                <label htmlFor="bmargin-box" className={clx('input-label', 'text-normal')}>Dưới</label>
+                                <div className={clx('number-box', 'small')} >
+                                    <input type="number" id='bmargin-box' defaultValue={0} min={0} step={0.25} required />
+                                    <label className={clx('unit')} htmlFor="bmargin-box">inches</label>
                                 </div>
                             </div>
                         </div>
-                        <div className={clx('btn-field')}>
-                            <button type="button" onClick={clearFile} className={clx('round-btn', 'cancel', {'disabled': file === null})}>Hủy</button>
-                            <button type="submit" className={clx('round-btn', 'confirm', {'disabled': file === null})}>In</button>
-                        </div>
-                    </fieldset>
-                </form>
-            </div>
-            <div className={clx('popup', {'visible': popup, 'collapse': !popup, 'active': popup})}>
-                <div className={clx('popup-overlay')} onClick={closePopupBox}></div>
-                <div className={clx('popup-content')}>
-                    <button>
-                        <FontAwesomeIcon icon={faClose} onClick={closePopupBox}/>
-                    </button>
-                    <FontAwesomeIcon className={clx('popup-icon', popupset.theme)} icon={popupset.icon}/>
-                    <h2 className={clx(popupset.theme)}>{popupset.title}</h2>
-                    <p>{popupset.message}</p>
-                    <Link onClick={closePopupBox} className={clx('popup-btn')}>{popupset.btnContent}</Link>
-                </div>
+                    </div>
+                    <div className={clx('btn-field')}>
+                        <button type="button" onClick={clearFile} className={clx('round-btn', 'cancel', { 'disabled': file === null })}>Hủy</button>
+                        <button type="submit" className={clx('round-btn', 'confirm', { 'disabled': file === null })}>In</button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+        <div className={clx('popup', { 'visible': popup, 'collapse': !popup, 'active': popup })}>
+            <div className={clx('popup-overlay')} onClick={closePopupBox}></div>
+            <div className={clx('popup-content')}>
+                <button>
+                    <FontAwesomeIcon icon={faClose} onClick={closePopupBox} />
+                </button>
+                <FontAwesomeIcon className={clx('popup-icon', popupset.theme)} icon={popupset.icon} />
+                <h2 className={clx(popupset.theme)}>{popupset.title}</h2>
+                <p>{popupset.message}</p>
+                <Link onClick={closePopupBox} className={clx('popup-btn')}>{popupset.btnContent}</Link>
             </div>
         </div>
-    )
+    </div>
+)
 }
 
 export default PrintingPage;

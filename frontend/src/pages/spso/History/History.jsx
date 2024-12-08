@@ -110,7 +110,7 @@ function HistoryPage() {
       const blob = await response.blob();
       
       // Sử dụng FileSaver.js để tải xuống tệp
-      saveAs(blob, `${documentID}.pdf`);
+      saveAs(blob, `${documentID}`);
     } catch (error) {
       console.error('Lỗi tải xuống:', error);
       alert('Đã xảy ra lỗi khi tải file.');

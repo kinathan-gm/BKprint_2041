@@ -20,8 +20,7 @@ class FileUploadController extends Controller
 
             $file = $request->file('file');
             $studentID = $request->input('studentId');
-            $fileName = $file->getClientOriginalName() . '.' . $file->getClientOriginalExtension();
-            //$fileName = $file->getClientOriginalName();
+            $fileName = $file->getClientOriginalName();
             $path = $file->storeAs('uploads', $fileName, 'public');
 
             return response()->json([

@@ -17,7 +17,8 @@ class FileController extends Controller
             'message' => 'Tệp không tồn tại.'
         ], 404);
     }
-
-    return response()->download($filePath);
+    $cleanedFilename = pathinfo($filename, PATHINFO_FILENAME);
+    print($cleanedFilename);
+    return response()->download($filePath, $cleanedFilename);
 }
 }

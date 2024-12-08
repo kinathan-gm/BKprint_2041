@@ -12,6 +12,7 @@ import DashBoard from './pages/spso/DashBoard/DashBoard'
 import SpsoHistory from './pages/spso/History/History'  
 import { Route, Routes } from 'react-router-dom'
 import HomePage from './pages/homePage/Homepage'
+import PrinterPage from './pages/spso/PrinterManagementPage/PrinterPage'
 
 const App = () => {
   return (
@@ -30,6 +31,8 @@ const App = () => {
           <Route path='/spso/manage' element={<DefaultLayout isAuthenticated={true} userType={'spso'} userName={'N'}><PrinterManagementPage/></DefaultLayout>}/>   
           <Route path='/spso/config' element={<DefaultLayout isAuthenticated={true} userType={'spso'} userName={'N'}><ConfigPage/></DefaultLayout>}/>    
           <Route path='/spso/history'element={<DefaultLayout isAuthenticated={true} userType={'spso'} userName={'N'}><SpsoHistory/></DefaultLayout>}/>/    
+          <Route path='spso/printers/:id' element={<DefaultLayout isAuthenticated={true} userType={'student'} userName={'N'}><PrinterPage/></DefaultLayout>} />  
+          
        </Routes>  
     </div>
   )

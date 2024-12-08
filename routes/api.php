@@ -27,6 +27,7 @@ Route::post('/students/{idStudent}/paymentPage', [PaymentController::class, 'pay
 
 Route::get('/spso/history', [HistoryController::class, 'getHistory']);
 Route::get('/student/history', [HistoryController::class, 'getHistoryOfStudent']);
+Route::get('/printer/history', [HistoryController::class, 'getHistoryByPrinter']);
 
 Route::get('/document', [DocumentController::class, 'getDocumentByID']);
 Route::get('/printer', [PrinterController::class, 'getPrinterByID']);

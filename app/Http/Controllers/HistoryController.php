@@ -35,4 +35,14 @@ class HistoryController extends Controller
             'history' => $allHistory,
         ]);
     }
+
+    public function getHistoryByPrinter(Request $request)
+    {
+        $printer_id = $request->query('id');
+        $history = print_job::where('PrinterID', $printer_id)->get();
+        return response()->json([
+            'status' => 'success',
+            'history' => $history,
+        ]);
+    }
 }

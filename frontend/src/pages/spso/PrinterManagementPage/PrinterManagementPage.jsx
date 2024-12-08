@@ -8,7 +8,7 @@ function PrinterManagementPage() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [currentPrinter, setCurrentPrinter] = useState(null);
-  const [newPrinter, setNewPrinter] = useState({ name: "", location: ""});
+  const [newPrinter, setNewPrinter] = useState({ name: "", location: "" });
 
   useEffect(() => {
     fetch("http://127.0.0.1:8000/api/adminPrinters")
@@ -45,12 +45,12 @@ function PrinterManagementPage() {
       alert("Vui lòng nhập đầy đủ thông tin trước khi thêm.");
       return;
     }
-  
+
     const payload = {
-      name: newPrinter.name, 
-      location: newPrinter.location, 
+      name: newPrinter.name,
+      location: newPrinter.location,
     };
-  
+
     try {
       const response = await fetch("http://127.0.0.1:8000/api/printers", {
         method: "POST",
@@ -59,9 +59,9 @@ function PrinterManagementPage() {
         },
         body: JSON.stringify(payload),
       });
-  
+
       const data = await response.json();
-  
+
       if (response.ok) {
         // Nếu API trả về thành công, thêm máy in mới vào danh sách
         const newId = (printers.length + 1);
@@ -101,13 +101,13 @@ function PrinterManagementPage() {
       alert("Vui lòng nhập đầy đủ thông tin trước khi lưu.");
       return;
     }
-  
+
     const payload = {
       name: currentPrinter.name,
       location: currentPrinter.location,
       status: currentPrinter.status,
     };
-  
+
     try {
       const response = await fetch(`http://127.0.0.1:8000/api/printers/${currentPrinter.id}`, {
         method: "PUT",
@@ -116,9 +116,9 @@ function PrinterManagementPage() {
         },
         body: JSON.stringify(payload),
       });
-  
+
       const data = await response.json();
-  
+
       if (response.ok) {
         setPrinters((prevPrinters) =>
           prevPrinters.map((printer) =>
@@ -166,7 +166,13 @@ function PrinterManagementPage() {
           {printers.map((printer) => (
             <tr key={printer.id}>
               <td>{printer.id}</td>
-              <td>{printer.name}</td>
+              <td>
+                <a
+                  href={`printers/${printer.id}`}
+                >
+                  {printer.name}
+                </a>
+              </td>
               <td>{printer.location}</td>
               <td>
                 <span className={`status ${printer.status}`}>
@@ -181,6 +187,7 @@ function PrinterManagementPage() {
                   {printer.status === "on" ? "Vô hiệu hóa" : "Kích hoạt"}
                 </button>
                 <button
+
                   className="update-button"
                   onClick={() => handleOpenEditModal(printer)}
                 >
